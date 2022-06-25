@@ -1,0 +1,6 @@
+[server]
+proxy ansible_host=52.8.159.129
+
+[client]
+alpha ansible_host=54.151.50.63
+beta  ansible_host=54.215.111.64
