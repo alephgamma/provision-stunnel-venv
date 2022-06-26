@@ -1,0 +1,10 @@
+cert = /etc/pki/tls/certs/stunnel.pem
+key = /etc/pki/tls/private/stunnel.pem
+pid = /var/run/stunnel.pid
+output = /var/log/stunnel.log
+
+[server-stunnel]
+client = no
+accept = 3129
+connect = 2222
+
