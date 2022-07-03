@@ -8,6 +8,46 @@
   collections:
     - community.crypto
   tasks:
+#    - name: fix AppStream repo - mirrorlist
+#      lineinfile:
+#        path: /etc/yum.repos.d/CentOS-AppStream.repo
+#        regexp: '^(mirrorlist.*)'
+#        line: '#\1'
+#        backrefs: yes
+#      when: ansible_facts['distribution'] == "CentOS" and ansible_facts['distribution_release'] == "Core"
+#    - name: fix AppStream repos - baseurl
+#      lineinfile:
+#        path: /etc/yum.repos.d/CentOS-AppStream.repo
+#        regexp: '^#baseurl'
+#        line: 'baseurl=http://vault.centos.org/$contentdir/$releasever/AppStream/$basearch/os/'
+#      when: ansible_facts['distribution'] == "CentOS" and ansible_facts['distribution_release'] == "Core"
+#    - name: fix Base repo - mirrorlist
+#      lineinfile:
+#        path: /etc/yum.repos.d/CentOS-Base.repo
+#        regexp: '^(mirrorlist.*)'
+#        line: '#\1'
+#        backrefs: yes
+#      when: ansible_facts['distribution'] == "CentOS" and ansible_facts['distribution_release'] == "Core"
+#    - name: fix Base repos - baseurl
+#      lineinfile:
+#        path: /etc/yum.repos.d/CentOS-Base.repo
+#        regexp: '^#baseurl'
+#        line: 'baseurl=http://vault.centos.org/$contentdir/$releasever/AppStream/$basearch/os/'
+#      when: ansible_facts['distribution'] == "CentOS" and ansible_facts['distribution_release'] == "Core"
+#    - name: fix Extras repo - mirrorlist
+#      lineinfile:
+#        path: /etc/yum.repos.d/CentOS-Extras.repo
+#        regexp: '^(mirrorlist.*)'
+#        line: '#\1'
+#        backrefs: yes
+#      when: ansible_facts['distribution'] == "CentOS" and ansible_facts['distribution_release'] == "Core"
+#    - name: fix Extras repos - baseurl
+#      lineinfile:
+#        path: /etc/yum.repos.d/CentOS-Extras.repo
+#        regexp: '^#baseurl'
+#        line: 'baseurl=http://vault.centos.org/$contentdir/$releasever/AppStream/$basearch/os/'
+#      when: ansible_facts['distribution'] == "CentOS" and ansible_facts['distribution_release'] == "Core"
+
     - name: install squid
       yum:
         name: squid
@@ -23,14 +63,17 @@
       openssl_privatekey:
         path: /etc/pki/tls/private/stunnel.pem
     - name: create the csr
-      openssl_csr_pipe:
+#      openssl_csr_pipe:
+      openssl_csr:
+        path: /etc/pki/tls/certs/stunnel.csr
         privatekey_path: /etc/pki/tls/private/stunnel.pem
         common_name: stunnel
-      register: csr
+#      register: csr
     - name: sign the csr
       x509_certificate:
         path: /etc/pki/tls/certs/stunnel.crt
-        csr_content: "{{ csr.csr }}"
+        csr_path: /etc/pki/tls/certs/stunnel.csr
+#        csr_content: "{{ csr.csr }}"
         privatekey_path: /etc/pki/tls/private/stunnel.pem
         entrust_not_after: "+3650d"
         provider: selfsigned
