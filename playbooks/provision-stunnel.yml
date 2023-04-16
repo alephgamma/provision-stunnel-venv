@@ -1,0 +1,63 @@
+---
+- name: provision stunnel and squid environment
+  hosts: all
+  become: true
+  vars:
+    squid_port: "3128"
+    stunnel_port: "3129"
+  collections:
+    - community.crypto
+  tasks:
+    - name: install squid
+      yum:
+        name: squid
+      when: "'server' in group_names"
+    - name: install stunnel and nc
+      yum:
+        name:
+          - stunnel
+          - nmap-ncat
+          - net-tools
+
+    - name: create the privatekey
+      openssl_privatekey:
+        path: /etc/pki/tls/private/stunnel.pem
+    - name: create the csr
+      openssl_csr:
+        privatekey_path: /etc/pki/tls/private/stunnel.pem
+        path: /etc/pki/tls/certs/stunnel.csr
+        common_name: stunnel
+    - name: sign the csr
+      x509_certificate:
+        path: /etc/pki/tls/certs/stunnel.crt
+        csr_path: /etc/pki/tls/certs/stunnel.csr
+        privatekey_path: /etc/pki/tls/private/stunnel.pem
+        entrust_not_after: "+3650d"
+        provider: selfsigned
+
+    - name: create stunnel config - server
+      template:
+        src: templates/stunnel.conf.server.j2
+        dest: /etc/stunnel/stunnel.conf
+      when: "'server' in group_names"
+    - name: create stunnel config - client
+      template:
+        src: templates/stunnel.conf.client.j2
+        dest: /etc/stunnel/stunnel.conf
+      when: "'client' in group_names"
+    - name: create stunnel systemd
+      template:
+        src: templates/stunnel.service.j2
+        dest: /etc/systemd/system/stunnel.service
+
+    - name: enable squid
+      systemd:
+        name: squid
+        state: started
+        enabled: yes
+      when: "'server' in group_names"
+    - name: start stunnel
+      systemd:
+        name: stunnel
+        state: started
+        enabled: yes

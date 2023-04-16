@@ -1,3 +1,7 @@
+# Non permanent IPs
+#
+# 16 Apr 2023 - Dymanic inventory still broken for AWS using boto3
+#
 [server]
 proxy ansible_host=54.67.2.128
 

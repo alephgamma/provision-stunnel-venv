@@ -1,0 +1,13 @@
+---
+- name: validate proxy
+  hosts: client
+  become: true
+  environment:
+    http_proxy: https://localhost:2222
+    https_proxy: https://localhost:2222
+  tasks:
+    - name: get_uri
+      uri:
+        url: https://www.google.com
+        use_proxy: yes
+

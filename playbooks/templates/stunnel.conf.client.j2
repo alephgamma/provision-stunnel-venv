@@ -1,0 +1,11 @@
+cert = /etc/pki/tls/certs/stunnel.crt
+key = /etc/pki/tls/private/stunnel.pem
+pid = /var/run/stunnel.pid
+output = /var/log/stunnel.log
+sslVersion = all
+options = NO_SSLv2
+
+[to{{ stunnel_port  }}]
+client = yes
+accept = 2222
+connect = {{ hostvars['proxy'].ansible_host }}:{{ stunnel_port }}
