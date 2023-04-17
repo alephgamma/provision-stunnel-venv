@@ -28,7 +28,7 @@ Many assumptions satisfied (virtual environment enabled, authentication, keys di
 When all is well with the provisioning playbook, now run the verification playbook:
 ```
 [provision-stunnel-venv]$ ansible-playbook playbooks/verification.yml
-```
+
 PLAY [validate proxy] ********************************************************************************
 
 TASK [Gathering Facts] *******************************************************************************
@@ -39,4 +39,29 @@ fatal: [alpha]: FAILED! => {"changed": false, "elapsed": 10, "msg": "Status code
 
 PLAY RECAP *******************************************************************************************
 alpha                      : ok=1    changed=0    unreachable=0    failed=1    skipped=0    rescued=0    ignored=0
+```
+
+But the playbook fails and this is because the server provider has a firewall (or there may be an internal firewall as well) which needs to be opened for port 3129.
+
+![alt text](https://github.com/alephgamma/provision-stunnel-venv/blob/main/provision-stunnel-venv-blocked.png?raw=true)
+
+## Open the server for port 3129
+
+Each provider (or OS) is different. Depending on how this done, it may need to be manual until this function can be modularized.
+
+## It Works
+A quick verification, but this is not nor should be considered monitoring...
+```
+[provision-stunnel-venv]$ ansible-playbook playbooks/verification.yml
+
+PLAY [validate proxy] ********************************************************************************
+
+TASK [Gathering Facts] *******************************************************************************
+ok: [alpha]
+
+TASK [get_uri] ***************************************************************************************
+ok: [alpha]
+
+PLAY RECAP *******************************************************************************************
+alpha                      : ok=2    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
 ```
