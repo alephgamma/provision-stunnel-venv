@@ -5,5 +5,5 @@ output = /var/log/stunnel.log
 
 [from{{ stunnel_port }}]
 client = no
-accept = {{ ansible_default_ipv4.address }}:{{ stunnel_port }}
-connect = 127.0.0.1:{{ squid_port }}
+accept = {{ stunnel_port }}
+connect = {{ squid_port }}
