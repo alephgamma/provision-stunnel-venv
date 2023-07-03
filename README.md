@@ -47,7 +47,7 @@ But the playbook fails and this is because the server provider has a firewall (o
 
 ## Open the server for port 3129
 
-Each provider (or OS) is different. Depending on how this done, it may need to be manual until this function can be modularized.
+Each provider (or OS) is different. Depending on how this is done, it may need to be manual until this function can be modularized.
 
 ## It Works
 A quick verification, but this is not nor should be considered monitoring...
